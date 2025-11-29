@@ -1,0 +1,19 @@
+Create a dashboard page for the "Linkisck" website, which is a Linktree-style platform allowing users to create personalized link pages with a unique feature of integrating Google Ads for self-managed remarketing. The dashboard should be accessible only to logged-in users (assume a simple authentication system using session storage or cookies for this prototype). Use the same color scheme: primarily orange (#FF6600) for accents, buttons, and highlights, and white (#FFFFFF) for backgrounds and contrasting text. Keep the design minimalistic, modern, and responsive for desktop and mobile devices. Support multilingual content (Portuguese, English, French) with automatic browser language detection or a dropdown selector, similar to the landing page.
+
+Structure of the Dashboard:
+- **Header**: Include the "Linkisck" logo in orange, a navigation menu with links to "Dashboard", "My Pages", "Settings", "Google Ads Integration", and "Logout". Add a language selector (PT, EN, FR).
+- **Welcome Section**: A greeting like "Welcome back, [Username]!" with an overview of the user's subscription status (e.g., "Active Plan: Monthly - $19.99") and quick stats (e.g., total pages created, total clicks).
+- **Main Features Section**: Provide options to create and manage link pages. Include a prominent button or card for "Create New Page" that opens a form or wizard.
+  - **General Page Creation**: Allow users to create standard link pages with custom titles, descriptions, and multiple links (e.g., social media, websites).
+  - **Musician-Specific Options**: Add a toggle or category selector for "Musician Mode" when creating a page. If enabled:
+    - **Artist Landing Page**: A template for the artist's main profile page, with fields to add bio, profile image, and links to overall streaming platforms (Spotify, SoundCloud, YouTube, NetEase, Deezer, iTunes/Apple Music, and others like Tidal, Amazon Music). Include customizable sections for upcoming events, merchandise, or social links.
+    - **Product/Music Landing Pages**: Allow creation of pages for individual products or songs. For each song/product:
+      - Fields for song title, artist name, release date, cover art upload.
+      - Dedicated sections to add multiple streaming links: Spotify, SoundCloud, YouTube, NetEase, Deezer, iTunes/Apple Music, and an "Add Custom Link" option for others.
+      - Each song page should be a separate landing page that centralizes these links, with analytics tracking for clicks.
+    - Integration with remarketing: For all musician pages, include a section to set up Google Ads directly—prompt users to connect their Google Ads account (use placeholders for API integration) and configure remarketing tags to target visitors who viewed specific song pages or the artist profile.
+- **Page Management**: A list or grid view of existing pages, with options to edit, delete, preview, or view analytics (clicks, unique visitors). For musician pages, show breakdowns per streaming link.
+- **Google Ads Remarketing Setup**: A dedicated tab or section where users can enable remarketing for their pages, input ad scripts or pixels (placeholders), and view basic performance metrics.
+- **Footer**: Similar to the landing page, with links to support, terms, and copyright.
+
+Generate the HTML, CSS, and JavaScript code for this dashboard page. Use a simple JavaScript framework like vanilla JS for interactivity (e.g., form handling, dynamic content based on musician mode toggle). For multilingual support, use a JS object with translations and switch based on selected language. Do not implement real backend (e.g., database, Stripe, Google Ads API)—use mock data and local storage for simulation. Ensure the page links back to the landing page if needed.

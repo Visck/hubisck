@@ -1,0 +1,23 @@
+You are updating the "Smart Link Creator" feature for Linkisck (Linktree-style with Google Ads remarketing), inspired by Hyppedit's multi-step wizard. We previously implemented MusicBrainz, but now switch to ACRCloud Metadata API for better cross-platform links (Spotify, YouTube, Apple Music, Deezer, SoundCloud, Tidal, etc.). This will auto-fill more reliably.
+
+First, REVERT and clean up the old MusicBrainz implementation:
+1. In server.js, remove all MusicBrainz-related code: Delete the mbUrl fetch, recording parsing, and any links extraction from MusicBrainz.
+2. Keep Spotify API part intact (for title/artist/cover/ISRC from Spotify URL).
+3. Remove any MusicBrainz references from .env or comments.
+
+Now, implement ACRCloud Metadata API:
+4. Add to .env: ACR_ACCESS_KEY and ACR_SECRET_KEY (I'll add values later via Secrets).
+5. In server.js, update POST /api/detect-track (or /api/fetch-track):
+   - After getting ISRC from Spotify, query ACRCloud: GET https://eu-api-v2.acrcloud.com/api/external-metadata/tracks?query=isrc:${isrc}&platforms=spotify,youtube,applemusic,deezer,soundcloud,tidal,amazonmusic
+   - Auth: Basic header with base64(ACR_ACCESS_KEY:ACR_SECRET_KEY)
+   - Parse response: Extract external_ids for each platform (e.g., links.spotify = data.data[0].external_ids.spotify.url)
+   - If no data or error, fallback to empty links object (user adds manually).
+   - Return JSON: {success: true, title, artist, cover, isrc, links: {spotify: 'url', youtube: 'url', ...}}
+
+6. Frontend (/public files): No major changes—keep the Source step input/button, auto-fill logic. On success, populate links in Step 5 (Links) with discovered URLs as editable inputs.
+
+7. Add error handling: If ACR fails (e.g., invalid key), log error and return {success: false, error: 'API issue—add links manually'}.
+
+8. Test with: https://open.spotify.com/track/4cOdK2wGLETKBW3PvgPWqT (JID's "Mantra"—should pull ISRC and 5+ links).
+
+Keep orange (#FF6600)/white theme, loading spinner, mobile preview, and wizard steps. Run and confirm it works without MusicBrainz.

@@ -1,0 +1,47 @@
+You are now building the core "Smart Link Creator" feature for my Linkisck project (a Linktree-style platform with built-in Google Ads remarketing).
+
+Please do the following step by step:
+
+1. Change the project to a full-stack Node.js + Express app (keep the current HTML/CSS/JS files but restructure properly).
+
+2. Create this folder structure:
+   - /public (move all current HTML, CSS, JS files here)
+   - server.js (main backend file)
+   - .env (with secrets)
+
+3. Install these packages:
+   express, axios, spotify-web-api-node, dotenv, cors
+
+4. In the "Create Smart Link" page (the page where users create a new link page), completely replace the old "New release / Existing links" section with this new flow:
+
+   - Replace it with a clean input field labeled:
+     "Enter any source/track URL to auto-fill your smart link (Spotify recommended)"
+   - Big orange button below: "Detect & Auto-Fill →"
+
+5. When the user clicks "Detect & Auto-Fill", do this:
+   - Extract the track ID if it's a Spotify link
+   - Call Spotify API to get: Title, Artist name, Cover art, and ISRC
+   - Use the ISRC to query MusicBrainz API and find official streaming links (YouTube, Apple Music, Deezer, SoundCloud, Tidal, Amazon Music, etc.)
+   - Automatically fill the form with:
+       • Song title
+       • Artist name
+       • Cover image (preview)
+       • All discovered streaming links (pre-filled in their respective fields)
+   - Show a success message: "Magic! We found your song on 7+ platforms"
+
+6. Implement a clean backend endpoint: POST /api/detect-track
+   (Use client credentials flow for Spotify – no user login needed)
+
+7. Add proper .env variables:
+   SPOTIFY_CLIENT_ID
+   SPOTIFY_CLIENT_SECRET
+
+8. Make everything work even if some links are missing (just leave those fields empty for manual entry).
+
+9. Keep the current orange (#FF6600) and white design – make it look professional and smooth.
+
+10. Add loading spinner while detecting and nice success/error messages.
+
+11. Make sure this works perfectly on mobile too.
+
+This is the killer feature that will make musicians love Linkisck. Build it exactly like this – I will test immediately after you finish.

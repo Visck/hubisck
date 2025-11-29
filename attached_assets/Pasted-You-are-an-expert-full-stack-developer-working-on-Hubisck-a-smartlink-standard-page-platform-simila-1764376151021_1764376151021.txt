@@ -1,0 +1,77 @@
+You are an expert full-stack developer working on Hubisck (a smartlink/standard page platform similar to Linktree/Biolink).
+
+CURRENT PROBLEM:
+The custom domain integration is currently implemented in a confusing and incorrect way. Right now it seems tied to individual pages or done in a "weird" way that causes URL slugs to break or not update globally.
+
+REQUIRED NEW ARCHITECTURE (MUST BE EXACTLY LIKE THIS):
+
+1. Custom Domain belongs to the ACCOUNT (user), NOT to individual pages.
+2. Each account can have AT MOST ONE active custom domain at a time.
+3. When a custom domain is configured and verified for the account:
+   - All existing standard pages and smartlinks of that user MUST automatically switch to use the new custom domain.
+   - All future page creations (standard pages or smartlinks) MUST automatically use the custom domain as the base URL.
+   - The "URL Slug" / "URL Label" field in creation/edit forms must show the final URL using the custom domain (e.g., https://mydomain.com/my-slug instead of https://hubisck.com/u/username/my-slug).
+
+TECHNICAL IMPLEMENTATION REQUIREMENTS:
+
+Database changes (Supabase/PostgreSQL assumed):
+- Add columns to "profiles" or "accounts" table:
+  - custom_domain (text, nullable, unique)
+  - custom_domain_verified (boolean, default false)
+  - custom_domain_verified_at (timestamptz, nullable)
+
+Backend (Node.js + Express or Next.js API routes):
+- Create the following API endpoints under /api/account/domains:
+  POST   /api/account/domains/connect      → start custom domain connection (save domain, return DNS records to add)
+  POST   /api/account/domains/verify       → check DNS and SSL, mark as verified if OK
+  DELETE /api/account/domains/remove       → remove custom domain
+  GET    /api/account/domains/status       → return current custom domain + verification status
+
+- Middleware or helper function getBaseUrl(user) that returns:
+  user.custom_domain_verified ? `https://${user.custom_domain}` : default Hubisck domain for that user
+
+Page/Smartlink model changes:
+- When generating full URL for any page/smartlink, always use getBaseUrl(user) + "/" + slug
+- Add a DB trigger or migration to update existing pages if needed (or just rely on runtime resolution)
+
+Frontend - Customer Dashboard (React/Next.js):
+- New section "Custom Domain" inside Settings tab (top-level, clearly visible)
+- UI flow:
+  1. Input field for domain (e.g., mycompany.com)
+  2. "Connect domain" button → shows exact DNS records (CNAME hubisck.com or A record if root)
+  3. Automatic verification every 30 seconds + manual "Verify now"
+  4. When verified → show green check + "Active" status
+  5. Show preview: "Your links will appear as: https://yourdomain.com/your-slug"
+  6. "Remove custom domain" button
+
+Page creation / edit forms (both standard pages and smartlinks):
+- The label "Your URL" must dynamically show the correct base domain:
+  Example when custom domain active:
+  Your URL: https://mycompany.com/ _______
+  Example when no custom domain:
+  Your URL: https://hubisck.com/u/username/ _______
+- The slug input remains the same, only the displayed prefix changes.
+
+Routing & DNS handling:
+- Use Vercel/Netlify-like custom domain handling or Cloudflare worker if needed
+- All requests to verified custom domains must proxy/redirect to the correct user page on the main domain
+- 301 redirects from old hubisck.com links → new custom domain (optional but nice-to-have)
+
+Security & Edge Cases:
+- Only allow one custom domain per account
+- Domain must not already be used by another account
+- Proper SSL via Let’s Encrypt or your platform’s built-in
+- Graceful fallback if domain verification is lost
+
+Deliverables I want from you right now in Replit:
+1. Full working Supabase migration SQL for the new columns + unique constraint
+2. Complete Next.js API routes for all custom domain endpoints (with proper auth using Supabase auth)
+3. Updated page/smartlink URL generation helper (getBaseUrl + getFullUrl functions)
+4. New "Custom Domain" settings component (clean UI with verification flow)
+5. Updated page creation/edit forms to show dynamic URL preview
+6. DNS verification logic (check CNAME or A record + HTTPS check)
+
+Make everything clean, well-commented, type-safe (TypeScript), no bugs, production-ready.
+Use Tailwind for styling consistency with the rest of Hubisck dashboard.
+
+Start coding now and implement everything exactly as specified above.

@@ -1,0 +1,63 @@
+URGENT: Add full Custom Domain / Subdomain support for Hubisck users (exactly like Hypeddit, Linktree Pro, ToneDen).
+
+Requirements (must be 100% functional and beautiful):
+
+1. In the user dashboard, add a new section called “Your Domain” (orange accent, prominent).
+
+2. Two options side-by-side:
+
+   OPTION A — Free Subdomain (default)
+   • Input field: “yourname.hubisck.com”
+   • Live preview below the field
+   • Auto-saves when typing
+   • Button “Claim this free link” (orange)
+
+   OPTION B — Your Own Domain (Premium look)
+   • Input field: “mymusic.com” or “www.mybrand.com”
+   • Status indicator: Not connected / Verifying / Connected (green check)
+   • Big orange button: “Connect Your Domain”
+
+3. When user clicks “Connect Your Domain”, show a clean modal with exact instructions (copy-paste ready):
+
+   Title: Connect your own domain in 2 minutes
+
+   Step 1 – Go to your domain provider (Hostinger, GoDaddy, Namecheap, Cloudflare…)
+   Step 2 – Add this DNS record:
+
+   Type: CNAME
+   Name: @    (or leave blank for root domain)
+   Value: YOUR_REPLIT_DEPLOYMENT_URL.repl.co    ← replace automatically with the real URL of this deployment
+   TTL: Auto
+
+   (If the provider doesn’t accept CNAME on root, use this alternative:)
+   Type: A
+   Name: @
+   Value: YOUR_REPLIT_IP    ← also auto-fill the current public IP
+
+   Step 3 – Click “I’ve added the record”
+   → Show “Verifying DNS…” (auto-check every 10 seconds)
+   → When resolved → show big green “Connected! Your page is now live at https://yourdomain.com”
+
+4. Server-side logic (Node.js / whatever you use):
+   • On every request, read req.headers.host
+   • First: look for exact match in users.custom_domain column
+   • If found → load that user’s page (ignore path conflicts — slugs can be identical)
+   • Else if host ends with .hubisck.com → extract subdomain as username
+   • Else → normal routing (hubisck.com main site)
+
+5. Database:
+   • Add column to users table: custom_domain VARCHAR(255) NULL
+   • Add column: subdomain VARCHAR(100) NULL (for free *.hubisck.com)
+
+6. Cloudflare / DNS tips page (beautiful, copy-paste ready for Hostinger, GoDaddy, Cloudflare, Namecheap).
+
+7. After connection:
+   • Show the custom domain as the main URL everywhere
+   • QR code updates automatically
+   • Analytics show visits from the custom domain
+
+8. Fallback page if domain not connected or wrong: “This domain is not connected to any Hubisck page yet.”
+
+9. Make everything dark-mode friendly, orange buttons, Hubisck branding.
+
+Do it now, test with a fake domain in preview, and reply exactly: “CUSTOM DOMAIN FEATURE 100% READY AND LIVE”

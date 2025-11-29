@@ -1,0 +1,49 @@
+Você é um desenvolvedor full-stack experiente e está corrigindo meu projeto Link-in-bio chamado Hubisck[](https://hubisck.com).
+
+Atualmente tenho dois bugs críticos:
+
+1. O cadastro de Standard Page NÃO está funcionando
+   - Quando o usuário logado clica em “Create Page” no modal de Standard Page, nada é salvo no banco MySQL.
+   - No DevTools do navegador aparecem vários erros 401 e 500 nas rotas da API:
+     - POST /api/auth/callblack 500
+     - GET  /api/dashboard/stats 401
+     - GET  /api/link-pages 401
+     - GET  /api/account/domain/status 401
+     - E vários “Failed to sync user with backend”
+
+2. Depois que a página é criada (quando consigo criar manualmente no banco), o botão “Edit” das Standard Pages não funciona — nada acontece ao clicar.
+
+O projeto está rodando com:
+- Next.js 13+ (app router (TypeScript)
+- Prisma + MySQL (PlanetScale ou similar)
+- Autenticação com NextAuth.js
+- API routes em /app/api/...
+
+Por favor, faça o seguinte, passo a passo, e corrija tudo que for necessário:
+
+1. Corrija todas as rotas da API que estão retornando 401/500 quando o usuário está logado:
+   - Verifique se o session está sendo enviado corretamente nas chamadas fetch (credentials: 'include' ou headers com Authorization Bearer)
+   - Corrija o middleware de autenticação se estiver bloqueando rotas que deveriam ser acessíveis para usuários logados
+   - Corrija especialmente a rota que cria a Standard Page (provavelmente POST /api/link-pages ou similar)
+
+2. Implemente/fixe o cadastro completo da Standard Page:
+   - Ao clicar em “Create Page”, deve ser feita uma chamada POST para a rota correta
+   - Deve salvar no banco (tabela link_pages ou similar) os campos: userId, slug (hubisck.com/slug), displayName, bio, website, social links, backgroundColor, textColor, etc.
+   - Após sucesso, redirecionar para /dashboard ou recarregar a lista de páginas
+
+3. Corrija o botão “Edit” de cada Standard Page no dashboard:
+   - Ao clicar em “Edit” deve abrir o modal de edição já preenchido com os dados atuais da página
+   - Deve haver também uma rota PUT /api/link-pages/[id] para salvar as alterações
+   - Após salvar edição, atualizar a página na lista sem refresh
+
+4. Garanta que o Prisma schema está correto para a tabela de link_pages (ou o nome que você usa) e rode prisma generate se necessário.
+
+5. Me entregue:
+   - Todos os arquivos corrigidos ou novos (código completo com comentários)
+   - Quaisquer ajustes no middleware.ts, nas API routes, nos componentes de frontend (especialmente o modal de Standard Page e a lista no dashboard)
+   - Instruções finais de como testar (ex.: limpar cookies, hard refresh, etc.)
+
+Quero que o fluxo completo funcione 100%:
+Criar nova Standard Page → aparece na lista → Edit funciona → alterações são salvas no MySQL e refletem imediatamente.
+
+Faça agora todas as correções necessárias no código do meu Repl atual.

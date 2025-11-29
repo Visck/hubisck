@@ -1,0 +1,56 @@
+URGENT: START FROM ZERO – MAKE IT CLEAN AND PERFECT
+
+1. Completely delete ALL existing authentication code:
+   - Remove Replit Auth
+   - Remove any old Supabase integration
+   - Remove Google / Apple OAuth buttons and code
+   - Remove any custom login/signup pages that exist now
+
+2. Install and configure ONLY Supabase Auth (email + password) from scratch using @supabase/supabase-js v2
+
+3. Create a single Supabase client (client-side only):
+   import { createClient } from '@supabase/supabase-js'
+   const supabase = createClient(
+     import.meta.env.VITE_SUPABASE_URL,
+     import.meta.env.VITE_SUPABASE_ANON_KEY
+   )
+
+4. New clean pages:
+   - /login → email + password field + “Log In” button
+   - /signup → email + password + confirm password (min 8 chars, uppercase, lowercase, number)
+   - “Create Account” button calls: supabase.auth.signUp({ email, password })
+   - After successful signup → show big message: “Check your email to activate your Hubisck account”
+   - Supabase must send confirmation email automatically
+   - Clicking the link in the email → redirects to https://hubisck.com and logs the user in automatically
+
+5. Login flow:
+   - supabase.auth.signInWithPassword({ email, password })
+   - If email_not_confirmed → show big red banner: “Please confirm your email to activate your Hubisck account”
+
+6. Protect ALL protected pages (dashboard, links, profile, etc):
+   - Use supabase.auth.getSession()
+   - If no session OR email not verified → redirect to /login
+
+7. Required secrets (ONLY these two for client-side):
+   VITE_SUPABASE_URL = https://mgvpyjlpouvgmaodbdjk.supabase.co
+   VITE_SUPABASE_ANON_KEY = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im1ndnB5amxwb3V2Z21hb2RiZGprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQzMjU3MjUsImV4cCI6MjA3OTkwMTcyNX0.lgIK10Y1MohDutrUmhznucjpbBQHxocU5zQit-8h6kc
+
+8. In Supabase dashboard (project mgvpyjlpouvgmaodbdjk):
+   - Authentication → Settings → Enable “Email Confirmations” = ON
+   - Redirect URLs must include:
+     https://hubisck.com/**
+     https://*.replit.app/**
+     https://*.replit.dev/**
+
+9. UI requirements:
+   - Full dark mode
+   - Hubisck branding everywhere (orange logo, correct name)
+   - Clean, modern, professional look
+   - No external logos except Supabase (optional)
+
+10. Keep Hostinger MySQL database 100% untouched – only use Supabase for authentication
+
+Do everything now, test signup + email confirmation + login both in preview and on hubisck.com.
+Make sure there are ZERO errors/warnings in the browser console.
+
+When finished, reply exactly: “HUBISCK AUTH 100% CLEAN AND WORKING”

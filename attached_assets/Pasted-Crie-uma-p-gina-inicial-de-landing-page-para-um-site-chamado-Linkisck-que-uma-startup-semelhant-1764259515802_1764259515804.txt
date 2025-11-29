@@ -1,0 +1,16 @@
+Crie uma página inicial de landing page para um site chamado "Linkisck", que é uma startup semelhante ao Linktree, permitindo que usuários criem páginas personalizadas com links para suas redes sociais, sites e conteúdos. A página deve ser multilíngue, suportando português, inglês e francês, com detecção automática de idioma do navegador do usuário ou uma opção de seleção manual. Use cores predominantemente laranja (#FF6600 como cor principal) e branco (#FFFFFF como fundo e textos contrastantes), com design minimalista, moderno e responsivo para desktops e mobiles.
+Estrutura da página:
+
+Cabeçalho (Header): Inclua o logotipo "Linkisck" em laranja no topo, com um menu simples para seleção de idioma (bandeiras ou dropdown: PT, EN, FR). Adicione um botão de "Login" e "Cadastre-se" no canto direito.
+Seção Principal (Hero Section): Um título chamativo explicando o que é o Linkisck: "Crie sua página de links personalizada e impulsione seu público com remarketing inteligente!" (em PT), "Create your personalized link page and boost your audience with smart remarketing!" (em EN), "Créez votre page de liens personnalisée et boostez votre audience avec un remarketing intelligent !" (em FR). Abaixo, uma descrição breve: Linkisck é uma ferramenta simples para centralizar seus links, mas com o diferencial de integrar Google Ads diretamente para remarketing personalizado, permitindo que você exiba anúncios para visitantes que acessaram sua página, aumentando engajamento e conversões sem depender de plataformas externas.
+Benefícios e Diferenciais: Uma seção com ícones ou bullets destacando:
+Fácil de usar: Crie e personalize em minutos.
+Multilíngue e global: Suporte a PT, EN, FR.
+Remarketing próprio via Google Ads: Adicione anúncios personalizados para retargeting de visitantes.
+Análises integradas: Veja métricas de cliques e engajamento.
+Design responsivo e customizável.
+
+Plano de Preços: Uma seção clara apresentando o plano mensal único: R$19,99 (para usuários no Brasil), €19.99 (para Europa), ou $19.99 (para outros). Detecte a moeda com base na localização do usuário ou permita seleção. Mencione que o pagamento é via Stripe, seguro e recorrente. Inclua um botão "Assine Agora" que leva a uma página de checkout (não implemente o checkout aqui, apenas o link placeholder).
+Rodapé (Footer): Inclua links para Termos de Serviço, Política de Privacidade, Contato, e redes sociais. Adicione copyright: "© 2025 Linkisck - Todos os direitos reservados."
+
+Gere o código HTML, CSS e JavaScript básico necessário para esta página estática. Use fontes como Roboto ou Arial para texto. Certifique-se de que o conteúdo mude dinamicamente com base no idioma selecionado (use um script simples para alternar textos). Para multimoeda, use detecção de geolocalização via JavaScript (ex: navigator.language ou API gratuita como ipapi.co). Não inclua integração real com Stripe ou Google Ads nesta página inicial; foque apenas na apresentação.

@@ -1,0 +1,70 @@
+You are an expert Next.js + Supabase full-stack developer fixing a critical authentication bug in Hubisck (biolink/smartlink SaaS).
+
+PROBLEM:
+When a logged-in user tries to create a new Standard Page or Smartlink in production[](https://hubisck.com), all API calls return 401 Unauthorized:
+- POST /api/link-pages  → 401
+- GET  /api/account/domains/status → 401  
+- And many others
+
+But everything works perfectly on localhost:3000.
+
+This only started happening after adding custom domain features and new API routes.
+
+ROOT CAUSE (very common in Supabase + Next.js):
+The Supabase client/session cookie is NOT being sent properly to API routes in production because:
+1. API routes are missing the correct cookie forwarding from middleware or getServerSideProps
+2. OR the new API routes under /api/account/* and /api/link-pages/* are not properly reading the Supabase session using createRouteHandlerClient or createServerComponentClient with { cookies }
+3. OR middleware.ts is incorrectly rewriting/stripping cookies on production (Vercel/Netlify edge)
+
+FIX REQUIREMENTS:
+
+1. Fix authentication on ALL API routes so they accept the logged-in user session in production exactly like localhost.
+
+2. Specifically fix these endpoints (they must all work when user is logged in):
+   - POST /api/link-pages
+   - GET  /api/account/domains/status
+   - Any other /api/account/* or /api/link-pages/*
+
+3. Correct way to read Supabase user in API routes (Next.js App Router):
+   Use this pattern in every route.ts file:
+
+   import { createRouteHandlerClient } from '@supabase/auth-helpers-nextjs'
+   import { cookies } from 'next/headers'
+   import { NextResponse } from 'next/server'
+
+   export async function POST(request: Request) {
+     const supabase = createRouteHandlerClient({ cookies })
+     const { data: { session } } = await supabase.auth.getSession()
+
+     if (!session) {
+       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+     }
+
+     const user = session.user
+     // ... rest of logic
+   }
+
+4. If using Pages Router (/pages/api/), use:
+   import { supabaseServerClient } from '@/utils/supabase-server'
+
+5. Also check and fix middleware.ts:
+   - It must NOT block or rewrite cookies for /api/* routes
+   - Must include cookies() in any matcher that touches authenticated paths
+
+6. Ensure the Supabase anon and service_role keys are correctly set in production environment variables (Vercel/Netlify)
+
+DELIVERABLES – Do this NOW in the codebase:
+
+1. Replace ALL API route handlers that check auth with the correct createRouteHandlerClient + cookies() pattern above
+2. Fix POST /api/link-pages/route.ts → make it accept authenticated user in production
+3. Fix GET  /api/account/domains/status/route.ts → same fix
+4. Check and patch middleware.ts to NOT interfere with API routes
+5. Add a small /api/debug/session route that returns:
+   { authenticated: !!session, userId: session?.user?.id, env: process.env.NODE_ENV }
+   So we can test if session is really reaching API routes in production
+
+After your fix:
+→ User logs in → opens "Create Standard Page" → fills form → clicks "Create Page" → must work instantly with NO 401 errors in production.
+
+Do it now, make it clean, add comments, and test it live.
+This bug is blocking all page creation in production — highest priority.
